@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sklep Serwerów Discord</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+      transition: background 0.3s, color 0.3s;
+    }
+    .container {
+      max-width: 1200px;
+      margin: auto;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .header h1 {
+      font-size: 36px;
+      color: #4caf50;
+    }
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    select, input[type="text"], button {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .packages {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .package {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: 0.3s;
+    }
+    .package:hover {
+      transform: scale(1.03);
+    }
+    .package h3 {
+      margin: 10px 0;
+      color: #333;
+    }
+    .price {
+      font-size: 24px;
+      margin: 15px 0;
+      color: #4caf50;
+    }
+    .btn {
+      padding: 10px 20px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn:hover {
+      background-color: #45a049;
+    }
+    .discord {
+      margin-top: 40px;
+      text-align: center;
+    }
+    .discord a {
+      display: inline-flex;
+      align-items: center;
+      background-color: #7289da;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 18px;
+      text-decoration: none;
+      margin-top: 10px;
+    }
+    .discord a:hover {
+      background-color: #5b6eae;
+    }
+    .discord img {
+      width: 24px;
+      margin-right: 10px;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(0,0,0);
+      background-color: rgba(0,0,0,0.4);
+      padding-top: 60px;
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 600px;
+    }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>Sklep Serwerów Discord</h1>
+  </div>
+
+  <div class="controls">
+    <select id="currency" onchange="updatePrices()">
+      <option value="EUR">€ Euro</option>
+      <option value="USD">$ Dolar</option>
+      <option value="PLN">zł Złoty</option>
+    </select>
+
+    <input type="text" id="promoCode" placeholder="Kod rabatowy">
+    <button onclick="applyPromoCode()">Użyj kodu</button>
+
+    <select id="theme" onchange="changeTheme()">
+      <option value="white">Biały</option>
+      <option value="grey">Szary</option>
+      <option value="black">Czarny</option>
+    </select>
+  </div>
+
+  <div class="packages">
+    <div class="package">
+      <h3 id="title-basic">Serwer Standard</h3>
+      <p id="desc-basic">Gotowy do użycia serwer Discord.</p>
+      <div class="price" id="price-basic">2 €</div>
+      <a class="btn" id="paypal-basic" href="#" target="_blank">Kup</a>
+      <button class="btn" onclick="openModal('standard')">OPIS</button>
+    </div>
+
+    <div class="package">
+      <h3 id="title-medium">Serwer Premium</h3>
+      <p id="desc-medium">Lepszy wygląd, więcej funkcji.</p>
+      <div class="price" id="price-medium">5 €</div>
+      <a class="btn" id="paypal-medium" href="#" target="_blank">Kup</a>
+      <button class="btn" onclick="openModal('premium')">OPIS</button>
+    </div>
+
+    <div class="package">
+      <h3 id="title-advanced">Serwer Ekskluzywny</h3>
+      <p id="desc-advanced">Zaawansowane funkcje i układ.</p>
+      <div class="price" id="price-advanced">10 €</div>
+      <a class="btn" id="paypal-advanced" href="#" target="_blank">Kup</a>
+      <button class="btn" onclick="openModal('exclusive')">OPIS</button>
+    </div>
+
+    <div class="package">
+      <h3 id="title-premium">Pakiet Ultimate</h3>
+      <p id="desc-premium">Najwyższa jakość + pełna personalizacja.</p>
+      <div class="price" id="price-premium">12 €</div>
+      <a class="btn" id="paypal-premium" href="#" target="_blank">Kup</a>
+      <button class="btn" onclick="openModal('ultimate')">OPIS</button>
+    </div>
+  </div>
+
+  <div class="discord">
+    <a href="https://discord.gg/x5hBFzM9NC" target="_blank">
+      <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" alt="Discord">
+      Dołącz na Discorda
+    </a>
+  </div>
+</div>
+
+<!-- Modal for descriptions -->
+<div id="modal-standard" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('standard')">&times;</span>
+    <h2>Serwer Standard</h2>
+    <p>Idealny dla znajomych. Estetyczny serwer ograniczający się do kanałów ogłoszeniowych, rozrywkowych, kilka botów i oczywiście ekonomia, bo co to za serwer dla znajomych bez ekonomii!?</p>
+  </div>
+</div>
+
+<div id="modal-premium" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('premium')">&times;</span>
+    <h2>Serwer Premium</h2>
+    <p>Idealny dla osób które chcą czegoś większego, ale nie chcą przepłacać. Znajdziesz tu sporo więcej estetycznych kategorii niż w pakiecie standard.</p>
+  </div>
+</div>
+
+<div id="modal-exclusive" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('exclusive')">&times;</span>
+    <h2>Serwer Ekskluzywny</h2>
+    <p>Prawdziwe uniwersum. Po prostu. Multum kategorii, botów i różnych rzeczy. przykładem jest mój serwer.</p>
+  </div>
+</div>
+
+<div id="modal-ultimate" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('ultimate')">&times;</span>
+    <h2>Serwer Ultimate</h2>
+    <p>To ty mówisz mi co na nim chcesz, a ja o robię. Napisz do mnie! Mój discord: szymeeloyt</p>
+  </div>
+</div>
+
+<script>
+  const basePrices = {
+    basic: 2,
+    medium: 5,
+    advanced: 10,
+    premium: 12
+  };
+
+  const currencyRates = {
+    EUR: 1,
+    USD: 1.1,
+    PLN: 4.5
+  };
+
+  let discount = 1;
+
+  function applyPromoCode() {
+    const promoCode = document.getElementById('promoCode').value.trim();
+    discount = promoCode.toLowerCase() === "asteroid" ? 0.8 : 1;
+    updatePrices();
+  }
+
+  function updatePrices() {
+    const currency = document.getElementById('currency').value;
+    const symbol = { EUR: '€', USD: '$', PLN: 'zł' }[currency];
+
+    document.getElementById('price-basic').innerText = (basePrices.basic * currencyRates[currency] * discount).toFixed(2) + ' ' + symbol;
+    document.getElementById('price-medium').innerText = (basePrices.medium * currencyRates[currency] * discount).toFixed(2) + ' ' + symbol;
+    document.getElementById('price-advanced').innerText = (basePrices.advanced * currencyRates[currency] * discount).toFixed(2) + ' ' + symbol;
+    document.getElementById('price-premium').innerText = (basePrices.premium * currencyRates[currency] * discount).toFixed(2) + ' ' + symbol;
+
+    updatePaypalLinks(currency);
+  }
+
+  function updatePaypalLinks(currency) {
+    const email = "szymekmovie@gmail.com";
+
+    const createLink = (price) => {
+      return `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${email}&currency_code=${currency}&amount=${price.toFixed(2)}&item_name=Discord+Server`;
+    };
+
+    document.getElementById('paypal-basic').href = createLink(basePrices.basic * currencyRates[currency] * discount);
+    document.getElementById('paypal-medium').href = createLink(basePrices.medium * currencyRates[currency] * discount);
+    document.getElementById('paypal-advanced').href = createLink(basePrices.advanced * currencyRates[currency] * discount);
+    document.getElementById('paypal-premium').href = createLink(basePrices.premium * currencyRates[currency] * discount);
+  }
+
+  function openModal(packageType) {
+    document.getElementById(`modal-${packageType}`).style.display = "block";
+  }
+
+  function closeModal(packageType) {
+    document.getElementById(`modal-${packageType}`).style.display = "none";
+  }
+
+  function changeTheme() {
+    const theme = document.getElementById('theme').value;
+    if (theme === 'white') {
+      document.body.style.background = '#f9f9f9';
+      document.body.style.color = '#000';
+    } else if (theme === 'grey') {
+      document.body.style.background = '#373737';
+      document.body.style.color = '#000';
+    } else if (theme === 'black') {
+      document.body.style.background = '#111';
+      document.body.style.color = '#fff';
+    }
+  }
+</script>
+
+</body>
+</html>
